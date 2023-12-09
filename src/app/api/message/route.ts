@@ -21,10 +21,10 @@ export const POST = async (req: NextRequest) => {
     const body = await req.json()
 
     const { getUser } = getKindeServerSession()
-    const user = getUser()
-    const { id: userId } = user
-
-    if (!userId)
+    const user = await getUser()
+    
+    user?.id
+    if (!user?.id)
         return new Response('Unauthorized', { status: 401 })
 
     const { fileId, message } =
@@ -33,7 +33,7 @@ export const POST = async (req: NextRequest) => {
     const file = await db.file.findFirst({
         where: {
             id: fileId,
-            userId,
+            userId : user?.id,
         },
     })
 
@@ -44,7 +44,7 @@ export const POST = async (req: NextRequest) => {
         data: {
             text: message,
             isUserMessage: true,
-            userId,
+            userId : user?.id,
             fileId,
         },
     })
@@ -116,7 +116,7 @@ export const POST = async (req: NextRequest) => {
                     text: completion,
                     isUserMessage: false,
                     fileId,
-                    userId
+                    userId: user?.id
                 }
             })
         }
