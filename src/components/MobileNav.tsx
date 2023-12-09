@@ -14,6 +14,7 @@ const MobileNav = ({ isAuth }: { isAuth: boolean }) => {
 
   useEffect(() => {
     if (isOpen) toggleOpen()
+    //@ts-ignore
   }, [pathname])
 
   const closeOnCurrent = (href: string) => {
